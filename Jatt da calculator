@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Jaat Da Calculator</title>
+<style>
+  :root{
+    --bg:#0e0e11; --card:#141419; --ink:#fafafa;
+    --line:#2a2a2f; --accent:#ffffff; --accent-ink:#0e0e11;
+  }
+  body{
+    margin:0; font-family:system-ui,Segoe UI,Roboto,Arial,sans-serif;
+    background:#0b0b0d; color:var(--ink);
+    display:flex; align-items:center; justify-content:center;
+    height:100vh; padding:20px;
+  }
+  .wrap{width:100%; max-width:420px;}
+  .title{text-align:center; font-weight:700; margin-bottom:12px;}
+
+  .card{
+    background:var(--card); border:1px solid var(--line);
+    border-radius:16px; padding:16px;
+  }
+
+  .display{
+    width:100%; height:70px; border:1px solid var(--line);
+    border-radius:12px; background:#0b0b0e; color:var(--ink);
+    font-size:28px; padding:10px 14px; text-align:right;
+  }
+
+  .keypad{margin-top:14px; display:grid; gap:10px; grid-template-columns:repeat(4,1fr);}
+  button.k{
+    appearance:none; border:1px solid var(--line); background:#16161b;
+    color:var(--ink); font-size:18px; font-weight:600;
+    padding:16px 0; border-radius:12px; cursor:pointer;
+    transition:transform .05s ease;
+  }
+  button.k:active{transform:scale(.96)}
+  .op{background:#1b1b22}
+  .light{background:var(--accent); color:var(--accent-ink); font-weight:700}
+  .wide{grid-column:span 4; padding:18px 0; font-size:20px;}
+  .hidden{display:none}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1 class="title">🧮 Jaat Da Calculator</h1>
+
+  <div class="card">
+    <input id="display" class="display" type="text" readonly>
+
+    <div class="keypad">
+      <button class="k op" onclick="clearAll()">AC</button>
+      <button class="k op" onclick="delOne()">DEL</button>
+      <button class="k op" onclick="press('/')">÷</button>
+      <button class="k op" onclick="press('*')">×</button>
+
+      <button class="k" onclick="press('7')">7</button>
+      <button class="k" onclick="press('8')">8</button>
+      <button class="k" onclick="press('9')">9</button>
+      <button class="k op" onclick="press('-')">−</button>
+
+      <button class="k" onclick="press('4')">4</button>
+      <button class="k" onclick="press('5')">5</button>
+      <button class="k" onclick="press('6')">6</button>
+      <button class="k op" onclick="press('+')">+</button>
+
+      <button class="k" onclick="press('1')">1</button>
+      <button class="k" onclick="press('2')">2</button>
+      <button class="k" onclick="press('3')">3</button>
+      <button class="k op" onclick="toggleExtras()">⋯</button>
+
+      <button class="k wide light" onclick="equals()">=</button>
+      <button class="k" onclick="press('0')">0</button>
+      <button class="k" onclick="press('.')">•</button>
+    </div>
+
+    <!-- Extra buttons (hidden by default) -->
+    <div id="extras" class="keypad hidden" style="margin-top:10px;">
+      <button class="k" onclick="press('%')">%</button>
+      <button class="k" onclick="press('(')">(</button>
+      <button class="k" onclick="press(')')">)</button>
+      <button class="k" onclick="toggleSign()">±</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const disp=document.getElementById('display');
+function press(v){disp.value+=v;}
+function clearAll(){disp.value='';}
+function delOne(){disp.value=disp.value.slice(0,-1);}
+function toggleSign(){
+  if(!disp.value){disp.value='-';return;}
+  try{let val=Number(eval(disp.value));disp.value=(val*-1).toString();}catch{}
+}
+function equals(){
+  try{
+    let out=Function('"use strict";return ('+disp.value+')')();
+    disp.value=(typeof out==='number'&&isFinite(out))?+(+out.toFixed(12)):'Error';
+  }catch{disp.value='Error';}
+}
+function toggleExtras(){
+  document.getElementById('extras').classList.toggle('hidden');
+}
+</script>
+</body>
+</html>
