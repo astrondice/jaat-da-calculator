@@ -1,109 +1,100 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Jaat Da Calculator</title>
-<style>
-  :root{
-    --bg:#0e0e11; --card:#141419; --ink:#fafafa;
-    --line:#2a2a2f; --accent:#ffffff; --accent-ink:#0e0e11;
-  }
-  body{
-    margin:0; font-family:system-ui,Segoe UI,Roboto,Arial,sans-serif;
-    background:#0b0b0d; color:var(--ink);
-    display:flex; align-items:center; justify-content:center;
-    height:100vh; padding:20px;
-  }
-  .wrap{width:100%; max-width:420px;}
-  .title{text-align:center; font-weight:700; margin-bottom:12px;}
-
-  .card{
-    background:var(--card); border:1px solid var(--line);
-    border-radius:16px; padding:16px;
-  }
-
-  .display{
-    width:100%; height:70px; border:1px solid var(--line);
-    border-radius:12px; background:#0b0b0e; color:var(--ink);
-    font-size:28px; padding:10px 14px; text-align:right;
-  }
-
-  .keypad{margin-top:14px; display:grid; gap:10px; grid-template-columns:repeat(4,1fr);}
-  button.k{
-    appearance:none; border:1px solid var(--line); background:#16161b;
-    color:var(--ink); font-size:18px; font-weight:600;
-    padding:16px 0; border-radius:12px; cursor:pointer;
-    transition:transform .05s ease;
-  }
-  button.k:active{transform:scale(.96)}
-  .op{background:#1b1b22}
-  .light{background:var(--accent); color:var(--accent-ink); font-weight:700}
-  .wide{grid-column:span 4; padding:18px 0; font-size:20px;}
-  .hidden{display:none}
-</style>
+  <title>Student Marks Calculator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f3f6fa;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .container {
+      background: #fff;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      width: 350px;
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #333;
+    }
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+      color: #444;
+    }
+    input {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+    button {
+      width: 100%;
+      padding: 10px;
+      background: #8e0000;
+      color: #fff;
+      font-size: 16px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #660000;
+    }
+    .result {
+      margin-top: 20px;
+      background: #f9f9f9;
+      padding: 12px;
+      border-radius: 6px;
+      font-size: 16px;
+      color: #333;
+    }
+  </style>
 </head>
 <body>
-<div class="wrap">
-  <h1 class="title">🧮 Jaat Da Calculator</h1>
+  <div class="container">
+    <h2>Marks Calculator</h2>
 
-  <div class="card">
-    <input id="display" class="display" type="text" readonly>
+    <label for="sub1">Subject 1</label>
+    <input type="number" id="sub1">
 
-    <div class="keypad">
-      <button class="k op" onclick="clearAll()">AC</button>
-      <button class="k op" onclick="delOne()">DEL</button>
-      <button class="k op" onclick="press('/')">÷</button>
-      <button class="k op" onclick="press('*')">×</button>
+    <label for="sub2">Subject 2</label>
+    <input type="number" id="sub2">
 
-      <button class="k" onclick="press('7')">7</button>
-      <button class="k" onclick="press('8')">8</button>
-      <button class="k" onclick="press('9')">9</button>
-      <button class="k op" onclick="press('-')">−</button>
+    <label for="sub3">Subject 3</label>
+    <input type="number" id="sub3">
 
-      <button class="k" onclick="press('4')">4</button>
-      <button class="k" onclick="press('5')">5</button>
-      <button class="k" onclick="press('6')">6</button>
-      <button class="k op" onclick="press('+')">+</button>
+    <button onclick="calculate()">Calculate</button>
 
-      <button class="k" onclick="press('1')">1</button>
-      <button class="k" onclick="press('2')">2</button>
-      <button class="k" onclick="press('3')">3</button>
-      <button class="k op" onclick="toggleExtras()">⋯</button>
-
-      <button class="k wide light" onclick="equals()">=</button>
-      <button class="k" onclick="press('0')">0</button>
-      <button class="k" onclick="press('.')">•</button>
-    </div>
-
-    <!-- Extra buttons (hidden by default) -->
-    <div id="extras" class="keypad hidden" style="margin-top:10px;">
-      <button class="k" onclick="press('%')">%</button>
-      <button class="k" onclick="press('(')">(</button>
-      <button class="k" onclick="press(')')">)</button>
-      <button class="k" onclick="toggleSign()">±</button>
+    <div class="result">
+      <p>Total: <span id="total"></span></p>
+      <p>Percentage: <span id="percentage"></span>%</p>
     </div>
   </div>
-</div>
 
-<script>
-const disp=document.getElementById('display');
-function press(v){disp.value+=v;}
-function clearAll(){disp.value='';}
-function delOne(){disp.value=disp.value.slice(0,-1);}
-function toggleSign(){
-  if(!disp.value){disp.value='-';return;}
-  try{let val=Number(eval(disp.value));disp.value=(val*-1).toString();}catch{}
-}
-function equals(){
-  try{
-    let out=Function('"use strict";return ('+disp.value+')')();
-    disp.value=(typeof out==='number'&&isFinite(out))?+(+out.toFixed(12)):'Error';
-  }catch{disp.value='Error';}
-}
-function toggleExtras(){
-  document.getElementById('extras').classList.toggle('hidden');
-}
-</script>
+  <script>
+    function calculate() {
+      let s1 = parseInt(document.getElementById("sub1").value) || 0;
+      let s2 = parseInt(document.getElementById("sub2").value) || 0;
+      let s3 = parseInt(document.getElementById("sub3").value) || 0;
+
+      let total = s1 + s2 + s3;
+      let percentage = (total * 100 / 300).toFixed(2);
+
+      document.getElementById("total").innerText = total;
+      document.getElementById("percentage").innerText = percentage;
+    }
+  </script>
 </body>
 </html>
+
